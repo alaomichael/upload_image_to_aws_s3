@@ -1,20 +1,17 @@
-// Uploading to AWS S3 bucket
-require("dotenv").config();
 const express = require('express');
 const multer = require('multer');
-const { s3Uploadv2 } = require("./s3Service");
 const uuid = require('uuid').v4;
 const app = express();
 
 // const upload = multer({ dest: "uploads/" });
 
 // single file upload
-// app.post('/upload',upload.single("file"),  async (req, res) {
+// app.post('/upload',upload.single("file"), function(req, res) {
 // res.json({status: 'success'});
 // });
 
 // multiple file uploads, with max number of upload
-// app.post('/upload',upload.array("file", 4),  async (req, res) {
+// app.post('/upload',upload.array("file", 4), function(req, res) {
 // res.json({status: 'success'});
 // });
 
@@ -24,24 +21,21 @@ const app = express();
 //     { name: 'resume', maxCount: 1 },
 // ]);
 
-// app.post('/upload', multiUpload, async (req, res) => {
+// app.post('/upload', multiUpload, (req, res) => {
 //     console.log(req.files);
 //     res.json({ status: 'success' });
 // });
 
 // custom file name and restriction on file type
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, "uploads");
-//     },
-//     filename: (req, file, cb) => {
-//         const { originalname } = file;
-//         cb(null, `${uuid()}-${originalname}`);
-//     },
-// });
-
-// Using memory storage for S3
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads");
+    },
+    filename: (req, file, cb) => {
+        const { originalname } = file;
+        cb(null, `${uuid()}-${originalname}`);
+    },
+});
 
 const fileFilter = (req, file, cb) => {
     if (file.mimetype.split('/')[0] === 'image') {
@@ -61,13 +55,8 @@ const uploadCustom = multer({
 });
 
 // field name = "file";
-app.post('/upload', uploadCustom.array("file"), async (req, res) => {
-    // add s3 upload function
-    const file = req.files[0];
-    const result = await s3Uploadv2(file);
-    console.log("upload result ==========================")
-    console.log(result);
-    res.json({ status: 'success', });
+app.post('/upload', uploadCustom.array("file"), (req, res) => {
+    res.json({ status: 'success' });
 });
 
 app.use((error, req, res, next) => {
