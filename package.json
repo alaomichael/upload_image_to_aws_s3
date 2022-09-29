@@ -1,5 +1,4 @@
 {
-  
   "name": "upload_image_to_aws_s3",
   "version": "1.0.0",
   "main": "index.js",
@@ -7,7 +6,7 @@
     "start":"nodemon index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Michael Alao",
   "license": "ISC",
   "description": "",
   "dependencies": {
