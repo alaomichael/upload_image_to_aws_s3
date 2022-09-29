@@ -26,7 +26,7 @@ const app = express();
 //     res.json({ status: 'success' });
 // });
 
-// custom file name
+// custom file name and restriction on file type
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "uploads");
@@ -37,7 +37,17 @@ const storage = multer.diskStorage({
     },
 });
 
-const uploadCustom = multer({ storage })
+const fileFilter = (req, file, cb) => {
+    if(file.mimetype.split('/')[0] === 'image'){
+        // allow to pass
+        cb(null, true);
+    } else{
+        // throw exception  error and don't allow to pass    
+        cb(new Error("file is not of the correct type: " + file.mimetype),false);
+    }
+};
+
+const uploadCustom = multer({ storage, fileFilter }); //middleware name
 
 app.post('/upload', uploadCustom.array("file"), (req, res) => {
     res.json({ status: 'success' });
