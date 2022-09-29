@@ -63,8 +63,7 @@ const uploadCustom = multer({
 // field name = "file";
 app.post('/upload', uploadCustom.array("file"), async (req, res) => {
     // add s3 upload function
-    const file = req.files[0];
-    const result = await s3Uploadv2(file);
+    const result = await s3Uploadv2(req.files);
     console.log("upload result ==========================")
     console.log(result);
     res.json({ status: 'success', });
