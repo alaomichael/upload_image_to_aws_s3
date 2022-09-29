@@ -2,43 +2,8 @@
 require("dotenv").config();
 const express = require('express');
 const multer = require('multer');
-const { s3Uploadv2 } = require("./s3Service");
-const uuid = require('uuid').v4;
+const { s3Uploadv2, s3Uploadv3 } = require("./s3Service");
 const app = express();
-
-// const upload = multer({ dest: "uploads/" });
-
-// single file upload
-// app.post('/upload',upload.single("file"),  async (req, res) {
-// res.json({status: 'success'});
-// });
-
-// multiple file uploads, with max number of upload
-// app.post('/upload',upload.array("file", 4),  async (req, res) {
-// res.json({status: 'success'});
-// });
-
-// allows multiple files to be uploaded with different field name
-// const multiUpload = upload.fields([
-//     { name: 'avatar', maxCount: 1 },
-//     { name: 'resume', maxCount: 1 },
-// ]);
-
-// app.post('/upload', multiUpload, async (req, res) => {
-//     console.log(req.files);
-//     res.json({ status: 'success' });
-// });
-
-// custom file name and restriction on file type
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, "uploads");
-//     },
-//     filename: (req, file, cb) => {
-//         const { originalname } = file;
-//         cb(null, `${uuid()}-${originalname}`);
-//     },
-// });
 
 // Using memory storage for S3
 const storage = multer.memoryStorage();
@@ -61,14 +26,48 @@ const uploadCustom = multer({
 });
 
 // field name = "file";
+// upload to s3 using v2
+// app.post('/upload', uploadCustom.array("file"), async (req, res) => {
+//     try {
+//         // add s3 v2 upload function
+//         const results = await s3Uploadv2(req.files);
+//         console.log("upload results ==========================")
+//         console.log(results);
+//         return res.json({ status: 'success', });
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
+
+// upload to s3 using v3, for single upload
+// app.post('/upload', uploadCustom.array("file"), async (req, res) => {
+//     try {
+//         // add s3 v3 upload function
+//         const file = req.files[0];
+//         const result = await s3Uploadv3(file);
+//         console.log("upload result ==========================")
+//         console.log(result);
+//         // you will have to manually create image url on sucsss
+//         return res.json({ status: 'success', });
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
+
+// upload to s3 using v3, for multiple upload
 app.post('/upload', uploadCustom.array("file"), async (req, res) => {
-    // add s3 upload function
-    const result = await s3Uploadv2(req.files);
-    console.log("upload result ==========================")
-    console.log(result);
-    res.json({ status: 'success', });
+    try {
+        // add s3 v3 upload function
+        const results = await s3Uploadv3(req.files);
+        console.log("upload results ==========================")
+        console.log(results);
+        return res.json({ status: 'success', });
+    } catch (err) {
+        console.log(err);
+    }
 });
 
+// error handling
 app.use((error, req, res, next) => {
     if (error instanceof multer.MulterError) {
         if (error.code === "LIMIT_FILE_SIZE") {
