@@ -1,5 +1,5 @@
-var testNum = 12376543.0345345445345; //5.54489;//12376543.0045345//12376543.345345345345; //134.9567654;
-var decPl = 7;
+var testNum = 5.9567654; //5.54489;//12376543.0045345//12376543.345345345345; //134.9567654;
+var decPl = 1;
 var testRes = getdecimalplace(testNum, decPl);
 // alert(testNum + ' rounded to ' + decPl + ' decimal places is ' + testRes);
 console.log(testNum + ' rounded to ' + decPl + ' decimal places is ' + testRes);
@@ -15,7 +15,7 @@ function getdecimalplace(n, r = 2) {
     console.log(indexOfDecimalPoint);
     console.log(arrayOfDigits02[indexOfDecimalPoint + r + 2]);
     console.log(arrayOfDigits02[indexOfDecimalPoint + r + 3]);
-    if (arrayOfDigits02[indexOfDecimalPoint + r + 1] == 4 && arrayOfDigits02[indexOfDecimalPoint + r + 2] >= 4 && arrayOfDigits02[indexOfDecimalPoint + r + 3] >= 5) {
+    if (arrayOfDigits02[indexOfDecimalPoint + r + 1] >= 4 && arrayOfDigits02[indexOfDecimalPoint + r + 2] >= 4 && arrayOfDigits02[indexOfDecimalPoint + r + 3] >= 5) {
         console.log("The value of the first next digit is", n.toString()[indexOfDecimalPoint + r + 1]);
         console.log("The value of the next digit is", n.toString()[indexOfDecimalPoint + r + 2]);
         console.log("The value of the next digit after the one above is", n.toString()[indexOfDecimalPoint + r + 3]);
@@ -24,9 +24,14 @@ function getdecimalplace(n, r = 2) {
         valueToReturn = (Math.round(Math.round(n * 10 ** (r + 1)) / 10) / 10 ** r);
         console.log("valueToReturn line 25 ================");
         console.log(valueToReturn);
-        if(valueToAdd < 0.01){
+        console.log("valueToReturn.toString()[r] line 27 ================");
+        console.log(valueToReturn.toString()[r]);
+        if ((r == 1 && valueToReturn.toString()[r] != undefined) || (valueToAdd <= 0.01 && valueToReturn.toString()[r] < 5 )){
             valueToReturn = valueToReturn + valueToAdd;
             console.log("valueToReturn line 29 ================");
+            console.log(valueToReturn);
+            valueToReturn = Number(valueToReturn.toFixed(r));
+            console.log("valueToReturn line 32 ================");
             console.log(valueToReturn);
         } 
     } else {
