@@ -1,5 +1,5 @@
-var testNum = 12376543.0045345//345345345345; //134.9567654;
-var decPl = 5;
+var testNum = 12376543.0345345445345; //5.54489;//12376543.0045345//12376543.345345345345; //134.9567654;
+var decPl = 7;
 var testRes = getdecimalplace(testNum, decPl);
 // alert(testNum + ' rounded to ' + decPl + ' decimal places is ' + testRes);
 console.log(testNum + ' rounded to ' + decPl + ' decimal places is ' + testRes);
@@ -24,9 +24,11 @@ function getdecimalplace(n, r = 2) {
         valueToReturn = (Math.round(Math.round(n * 10 ** (r + 1)) / 10) / 10 ** r);
         console.log("valueToReturn line 25 ================");
         console.log(valueToReturn);
-        valueToReturn = valueToReturn + valueToAdd;
-        console.log("valueToReturn line 28 ================");
-        console.log(valueToReturn);
+        if(valueToAdd < 0.01){
+            valueToReturn = valueToReturn + valueToAdd;
+            console.log("valueToReturn line 29 ================");
+            console.log(valueToReturn);
+        } 
     } else {
         valueToReturn = (Math.round(Math.round(n * 10 ** (r + 1)) / 10) / 10 ** r)
     }
